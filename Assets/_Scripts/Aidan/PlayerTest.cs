@@ -1,13 +1,16 @@
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerTest : MonoBehaviour
 {
-   
+    //MY ADDITION
     private float stormSpeed = -1000f; //speed at which the storm pushes the player towards the ground
+    StormLight stormLightScript;
 
-
+    // ORIGINAL CODE
     public float speed = 0.5f;
     public float ForceBase = 0.1f;
     public float ForceIncrement = 0.025f;
@@ -17,11 +20,15 @@ public class PlayerTest : MonoBehaviour
 
     void Awake()
     {
+        //Original Code
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+        //My Addition
+        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>(); // Reference to the stormlight script
     }
     void PlayerMove()
     {
@@ -72,6 +79,7 @@ public class PlayerTest : MonoBehaviour
     }
 
 
+    //My Addition
     private void OnTriggerEnter(Collider collision)
     {
         
@@ -80,6 +88,12 @@ public class PlayerTest : MonoBehaviour
             Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
 
+        }
+
+        if (collision.tag == "Orb") // if player collides with stormlight orb they regenerate to max
+        {
+            Debug.Log("stormlight orb claimed");
+            stormLightScript.stormLightEnergy = 100;
         }
     }
 }
