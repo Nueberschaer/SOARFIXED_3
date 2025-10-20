@@ -9,6 +9,7 @@ TagManager:
   - Storm
   - Orb
   - StormLight
+  - Enemy
   layers:
   - Default
   - TransparentFX

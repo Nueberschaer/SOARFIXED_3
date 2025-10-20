@@ -9,6 +9,8 @@ public class PlayerTest : MonoBehaviour
     //MY ADDITION
     private float stormSpeed = -1000f; //speed at which the storm pushes the player towards the ground
     StormLight stormLightScript;
+    public int distance = 0;
+    public int kills = 0;
 
     // ORIGINAL CODE
     public float speed = 0.5f;
@@ -25,7 +27,7 @@ public class PlayerTest : MonoBehaviour
         rb.useGravity = false;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY; // Added Y rotation Constraint
 
         //My Addition
         stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>(); // Reference to the stormlight script
@@ -75,7 +77,11 @@ public class PlayerTest : MonoBehaviour
 
     void Update()
     {
+        //Original Code
         PlayerMove();
+
+        //My addition
+        distance = (int)transform.position.x;
     }
 
 
@@ -85,15 +91,19 @@ public class PlayerTest : MonoBehaviour
         
         if (collision.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
-            Debug.Log("StormActive");
+           //Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
 
         }
 
         if (collision.tag == "Orb") // if player collides with stormlight orb they regenerate to max
         {
-            Debug.Log("stormlight orb claimed");
+            //Debug.Log("stormlight orb claimed");
             stormLightScript.stormLightEnergy = 100;
+        }
+        if (collision.tag == "Enemy")
+        {
+            kills += 1;
         }
     }
 }
