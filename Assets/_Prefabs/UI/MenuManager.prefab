@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cd0e3918be44a847895fe01ac4c0dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
-  PauseMenuCanvas: {fileID: 0}
+  PauseMenuCanvas: {fileID: 8040023756775857546, guid: f4eb5bf4b8fcc1f48b541fe6d1e529da, type: 3}

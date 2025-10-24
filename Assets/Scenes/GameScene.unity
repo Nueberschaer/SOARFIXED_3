@@ -689,6 +689,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PauseMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 8040023756775857546, guid: f4eb5bf4b8fcc1f48b541fe6d1e529da, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -957,10 +961,14 @@ PrefabInstance:
       propertyPath: PauseMenuCanvas
       value: 
       objectReference: {fileID: 1371611725}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6775160526023475434, guid: f4d2a756e80909b4aa06e86df8d7b963, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 718888093950395974, guid: f4d2a756e80909b4aa06e86df8d7b963, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2052116144}
   m_SourcePrefab: {fileID: 100100000, guid: f4d2a756e80909b4aa06e86df8d7b963, type: 3}
 --- !u!1 &1612382833
 GameObject:
@@ -1226,6 +1234,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2da800713873b964db8f3fbbf63fda18, type: 3}
+--- !u!1 &2052116141 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 718888093950395974, guid: f4d2a756e80909b4aa06e86df8d7b963, type: 3}
+  m_PrefabInstance: {fileID: 1556991791}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2052116144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052116141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cd0e3918be44a847895fe01ac4c0dc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
+  PauseMenuCanvas: {fileID: 1371611725}
 --- !u!1001 &2095770880
 PrefabInstance:
   m_ObjectHideFlags: 0
