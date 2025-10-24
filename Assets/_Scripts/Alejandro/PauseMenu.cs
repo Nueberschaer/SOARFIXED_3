@@ -10,7 +10,7 @@ public class PauseMenu : MonoBehaviour
     public static bool Paused = false;
     public GameObject PauseMenuCanvas;
     
-    void Start()
+    void Awake()
     {
         Time.timeScale = 1f;
         PauseMenuCanvas.SetActive(false);
@@ -40,7 +40,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Play()
     {
-
         PauseMenuCanvas.SetActive(false);
         Time.timeScale = 1f;
         Paused = false;

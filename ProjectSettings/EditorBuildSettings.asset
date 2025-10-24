@@ -8,12 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 0
+    path: Assets/Scenes/Alejandro.unity
+    guid: 5e400bd4edef4b048a862d6211535add
   - enabled: 1
     path: Assets/Scenes/Main Menu.unity
     guid: 8c461c889d66bcf4bb05e4d776c5013b
   - enabled: 1
-    path: Assets/Scenes/Alejandro.unity
-    guid: 5e400bd4edef4b048a862d6211535add
+    path: Assets/Scenes/GameScene.unity
+    guid: 3b772998558fe6145abbb5b345ee151e
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 54cdc7f644497ab4384e45a01a389e13
