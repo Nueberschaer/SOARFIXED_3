@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PlayerTest : MonoBehaviour
 {
     //MY ADDITION
-    private float stormSpeed = -1000f; //speed at which the storm pushes the player towards the ground
+    private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
     StormLight stormLightScript;
     public int distance = 0;
     public int kills = 0;
@@ -91,7 +91,7 @@ public class PlayerTest : MonoBehaviour
         
         if (collision.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
-           //Debug.Log("StormActive");
+           Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
 
         }
