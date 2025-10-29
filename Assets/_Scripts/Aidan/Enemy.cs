@@ -2,30 +2,41 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private Rigidbody rb;
+    public Rigidbody rb;
     private GameObject killDetector;
-    private int collisionSpeed = 2000;
     private PlayerFlight playerFlightScript;
+    StormLight stormLightScript;
+
+    private int collisionSpeed = 1000;
+    public int kills = 0;
 
     private void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         killDetector = transform.Find("KillDetection").gameObject;
-        playerFlightScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFlight>();
+        playerFlightScript = GameObject.Find("Player").GetComponent<PlayerFlight>();
+        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>();
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         rb.useGravity = true;
         killDetector.SetActive(false);
-        if (collision.gameObject.tag == "Floor")
+        if (other.gameObject.tag == "Floor")
         {
             gameObject.SetActive(false);
         }
-        if(collision.gameObject.tag == "Sword") 
+        if (other.gameObject.tag == "Sword")
         {
-            rb.AddForce(0, 0, collisionSpeed); // makes the enemy get pushed forward away from the player
+            rb.AddForce(0, -10, collisionSpeed);
+            kills += 1;
+            Debug.Log("Sword");
+        }
+        if (other.gameObject.tag == "Body")
+        {
+            stormLightScript.stormLightEnergy -= 50;
+            Debug.Log("BODY");
         }
     }
 
@@ -34,6 +45,6 @@ public class Enemy : MonoBehaviour
         if (gameObject.transform.position.z < playerFlightScript.gameObject.transform.position.z - 500)
         {
             gameObject.SetActive(false);
-        }
+        }   
     }
 }

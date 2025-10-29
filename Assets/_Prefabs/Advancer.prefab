@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.56895, y: 2.30682, z: 1.5}
+  m_LocalScale: {x: 1, y: 4, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 728337521367692510}
@@ -105,7 +105,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -139,8 +139,8 @@ Transform:
   m_GameObject: {fileID: 3176698837024929053}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.81, y: 0.27999997, z: -0.7}
-  m_LocalScale: {x: 0.1290666, y: 0.2480334, z: 1.5337443}
+  m_LocalPosition: {x: 0.854, y: 0.213, z: -1.244}
+  m_LocalScale: {x: 0.07796068, y: 0.3, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 728337521367692510}
@@ -216,7 +216,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: -8065447325480025199}
   m_Layer: 0
   m_Name: Advancer
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -297,6 +297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680d1ce70ce52e74a8ca2a1319e06525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Advancer
+  rb: {fileID: 0}
+  kills: 0
 --- !u!1 &4353215086559685020
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,5 +350,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.56895, y: 2.30682, z: 1.5}
+  m_Size: {x: 1, y: 4, z: 2}
   m_Center: {x: 0, y: 0, z: 0}

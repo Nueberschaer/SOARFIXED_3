@@ -13,6 +13,10 @@ TagManager:
   - Level2
   - EnemySpawner
   - Sword
+  - Level3
+  - Level4
+  - Level5
+  - Body
   layers:
   - Default
   - TransparentFX

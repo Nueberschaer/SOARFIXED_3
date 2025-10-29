@@ -5,12 +5,13 @@ public class UIStats : MonoBehaviour
 {
     public TextMeshProUGUI distanceText;
     public TextMeshProUGUI killsText;
+    private PlayerFlight playerScript;
+    private Enemy enemyScript;
 
-    PlayerFlight playerScript;
-
-    void Awake()
+    void Start()
     {
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFlight>(); //Reference to the player script
+        enemyScript = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
         
     }
 
@@ -28,7 +29,7 @@ public class UIStats : MonoBehaviour
 
     private void KillsDisplay()
     {
-        int kills = playerScript.kills;
+        int kills = enemyScript.kills;
         killsText.text = kills.ToString();
     }
 }

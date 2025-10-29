@@ -5,7 +5,7 @@ public class StormLight : MonoBehaviour
 {
 
     public float stormLightEnergy = 100f; //starting stormlight value
-    private float stormLightUsage = 4f; // how quickly the player loses stomlight
+    private float stormLightUsage = 1f; // how quickly the player loses stomlight
     public Image stormLightBar;
 
 

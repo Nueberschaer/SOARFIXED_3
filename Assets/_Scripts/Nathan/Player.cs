@@ -4,15 +4,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
-
-    //MY ADDITION
+    //My addition
+    public int distance = 0;
     private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
     StormLight stormLightScript;
     EnemySpawner enemySpawnerScript;
-    public int distance = 0;
-    public int kills = 0;
     //
-
 
 
 
@@ -54,8 +51,7 @@ public class PlayerFlight : MonoBehaviour
         if (playerCamera != null)
             playerCamera.fieldOfView = baseFOV;
 
-
-        //My Addition
+        //Addition
         stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>(); // Reference to the stormlight script
         enemySpawnerScript = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
         //
@@ -172,42 +168,47 @@ public class PlayerFlight : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collided with " + collision.gameObject.name);
+
+
     }
 
-
-    /* I commented this out as I added on trigger below
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered trigger: " + other.name);
-    }
-    */
+        //Debug.Log("Entered trigger: " + other.name);
 
 
-
-    //My Addition
-    private void OnTriggerEnter(Collider collision)
-    {
-
-        if (collision.tag == "Storm") //Pushes player towards the ground if the player enters a storm
+        //Addition
+        if (other.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
             Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
 
         }
 
-        if (collision.tag == "Orb") // if player collides with stormlight orb they regenerate to max
+        if (other.tag == "Orb") // if player collides with stormlight orb they regenerate to max
         {
-            //Debug.Log("stormlight orb claimed");
+            Debug.Log("stormlight orb claimed");
             stormLightScript.stormLightEnergy = 100;
-            collision.gameObject.SetActive(false);
+            other.gameObject.SetActive(false);
         }
-        if (collision.tag == "Enemy")
+
+        //EnemySpawning based on player reaching level distance
+        if (other.tag == "Level2")
         {
-            kills += 1;
-        }
-        if (collision.tag == "Level2") 
-        { 
             enemySpawnerScript.LevelTwoEnemies();
         }
+        if (other.tag == "Level3")
+        {
+            enemySpawnerScript.LevelThreeEnemies();
+        }
+        if (other.tag == "Level4")
+        {
+            enemySpawnerScript.LevelFourEnemies();
+        }
+        if (other.tag == "Level5")
+        {
+            enemySpawnerScript.LevelFiveEnemies();
+        }
+        //
     }
 }
