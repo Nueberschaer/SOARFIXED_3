@@ -351,10 +351,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50aed11ade70aee4f99dabe8e25f9363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  speed: 0.5
-  ForceBase: 0.1
-  ForceIncrement: 0.025
-  ForceMax: 1
+  playerCamera: {fileID: 0}
+  baseFOV: 60
+  maxFOV: 90
+  fovLerpSpeed: 5
+  fovAtSpeed: 20
+  baseSpeed: 10
+  speedIncrement: 3
+  maxSpeed: 20
+  stillThreshold: 0.05
 --- !u!143 &1057606508
 CharacterController:
   m_ObjectHideFlags: 0
@@ -661,7 +666,7 @@ Transform:
   m_GameObject: {fileID: 1712264275}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -8.86}
+  m_LocalPosition: {x: 1.23, y: 1.4, z: -4.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

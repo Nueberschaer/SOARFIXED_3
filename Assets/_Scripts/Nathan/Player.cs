@@ -4,6 +4,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
+    
+    public Camera playerCamera;        
+    public float baseFOV = 60f;
+    public float maxFOV = 90f;
+    public float fovLerpSpeed = 5f;     
+    public float fovAtSpeed = 20f;     
+
+    
     public float baseSpeed = 10f;
     public float speedIncrement = 3f;
     public float maxSpeed = 20f;
@@ -14,6 +22,9 @@ public class PlayerFlight : MonoBehaviour
     private float currentSpeed = 0f;
     private bool hovering = false;
 
+
+    private float displayedSpeed;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -21,6 +32,16 @@ public class PlayerFlight : MonoBehaviour
         rb.linearDamping = 1f;
         rb.angularDamping = 2f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        
+        if (playerCamera == null)
+        {
+            playerCamera = GetComponentInChildren<Camera>();
+            if (playerCamera == null) playerCamera = Camera.main;
+        }
+
+        if (playerCamera != null)
+            playerCamera.fieldOfView = baseFOV;
     }
 
     void Update()
@@ -46,7 +67,7 @@ public class PlayerFlight : MonoBehaviour
         // S: hover if moving, backward if stopped
         if (key.sKey.wasPressedThisFrame)
         {
-            bool isMoving = rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold);
+            bool isMoving = rb.velocity.sqrMagnitude > (stillThreshold * stillThreshold);
 
             if (isMoving)
             {
@@ -54,7 +75,7 @@ public class PlayerFlight : MonoBehaviour
                 hovering = true;
                 moveDirection = Vector3.zero;
                 currentSpeed = 0f;
-                rb.linearVelocity = Vector3.zero;
+                rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
             else
@@ -73,7 +94,7 @@ public class PlayerFlight : MonoBehaviour
             }
         }
 
-        // Left/right/vertical movement — works instantly (not toggle)
+        // Lateral/vertical input
         float x = 0f, y = 0f;
         if (key.aKey.isPressed) x -= 1f;
         if (key.dKey.isPressed) x += 1f;
@@ -83,20 +104,40 @@ public class PlayerFlight : MonoBehaviour
         Vector3 sideInput = new Vector3(x, y, 0f);
         if (sideInput.sqrMagnitude > 1f) sideInput.Normalize();
 
-        // Combine side motion with current forward/back direction
+        
         Vector3 forwardMovement = moveDirection * currentSpeed;
         Vector3 strafeMovement = new Vector3(sideInput.x, sideInput.y, 0f) * baseSpeed;
+
+       
         moveDirection = (forwardMovement + strafeMovement).normalized;
+
+        //fov adjustment
+        if (playerCamera != null)
+        {
+            
+            float actualSpeed = rb.velocity.magnitude;
+
+            
+            displayedSpeed = Mathf.Lerp(displayedSpeed, actualSpeed, Time.deltaTime * fovLerpSpeed);
+
+            
+            float speedPercent = Mathf.Clamp01(displayedSpeed / Mathf.Max(0.01f, fovAtSpeed));
+
+            
+            float targetFOV = Mathf.Lerp(baseFOV, maxFOV, speedPercent);
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
+        }
     }
 
     void FixedUpdate()
     {
         if (hovering)
         {
-            rb.linearVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             return;
         }
 
+        // Apply acceleration
         rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
     }
 
@@ -106,7 +147,6 @@ public class PlayerFlight : MonoBehaviour
         if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
     }
 
-    // Optional collision/trigger feedback
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collided with " + collision.gameObject.name);
