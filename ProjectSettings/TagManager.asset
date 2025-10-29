@@ -10,6 +10,9 @@ TagManager:
   - Orb
   - StormLight
   - Enemy
+  - Level2
+  - EnemySpawner
+  - Sword
   layers:
   - Default
   - TransparentFX

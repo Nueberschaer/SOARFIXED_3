@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    //public GameObject[] enemyTypes; //array that holds the enemy prefabs for spawning  I CANT FIGURE OUT HOW TO DO ARRAYS
 
     public GameObject fused;
     public GameObject advancer;
@@ -15,14 +14,13 @@ public class EnemySpawner : MonoBehaviour
     
     private int chasmHeightMin = -240;
     private int chasmHeightMax = -290;
-    private int chasmSideMin = -717;
-    private int chasmSideMax = -686;
+    private int chasmSideMin = 686;
+    private int chasmSideMax = 717;
 
     void Start()
     {
 
         LevelOneEnemies();
-        //LevelTwoEnemies();
     }
 
 
@@ -31,18 +29,18 @@ public class EnemySpawner : MonoBehaviour
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
-            levelOneSpawnPosition = new Vector3(Random.Range(-1250, 1900), Random.Range(chasmHeightMin, chasmHeightMax), Random.Range(chasmSideMin, chasmSideMax)); //controls the position in which enemies spawn
+            levelOneSpawnPosition = new Vector3(Random.Range(chasmSideMin, chasmSideMax), Random.Range(chasmHeightMin, chasmHeightMax), Random.Range(-200, 3000)); //controls the position in which enemies spawn
 
             Instantiate(randomEnemy, levelOneSpawnPosition, Quaternion.identity); // spawns the enemy
         }
     }
 
-    private void LevelTwoEnemies()
+    public void LevelTwoEnemies()
     {
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
-            levelTwoSpawnPosition = new Vector3(Random.Range(-1900, 5050), Random.Range(chasmHeightMin, chasmHeightMax), Random.Range(chasmSideMin, chasmSideMax)); //controls the position in which enemies spawn
+            levelTwoSpawnPosition = new Vector3(Random.Range(chasmSideMin, chasmSideMax), Random.Range(chasmHeightMin, chasmHeightMax), Random.Range(3100, 6300)); //controls the position in which enemies spawn
 
             Instantiate(randomEnemy, levelTwoSpawnPosition, Quaternion.identity); // spawns the enemy
         }

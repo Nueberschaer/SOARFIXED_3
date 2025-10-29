@@ -6,11 +6,11 @@ public class UIStats : MonoBehaviour
     public TextMeshProUGUI distanceText;
     public TextMeshProUGUI killsText;
 
-    PlayerTest playerScript;
+    PlayerFlight playerScript;
 
     void Awake()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTest>(); //Reference to the player script
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFlight>(); //Reference to the player script
         
     }
 

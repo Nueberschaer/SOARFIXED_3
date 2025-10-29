@@ -4,14 +4,25 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
-    
-    public Camera playerCamera;        
+
+    //MY ADDITION
+    private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
+    StormLight stormLightScript;
+    EnemySpawner enemySpawnerScript;
+    public int distance = 0;
+    public int kills = 0;
+    //
+
+
+
+
+    public Camera playerCamera;
     public float baseFOV = 60f;
     public float maxFOV = 90f;
-    public float fovLerpSpeed = 5f;     
-    public float fovAtSpeed = 20f;     
+    public float fovLerpSpeed = 5f;
+    public float fovAtSpeed = 20f;
 
-    
+
     public float baseSpeed = 10f;
     public float speedIncrement = 3f;
     public float maxSpeed = 20f;
@@ -33,7 +44,7 @@ public class PlayerFlight : MonoBehaviour
         rb.angularDamping = 2f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        
+
         if (playerCamera == null)
         {
             playerCamera = GetComponentInChildren<Camera>();
@@ -42,6 +53,12 @@ public class PlayerFlight : MonoBehaviour
 
         if (playerCamera != null)
             playerCamera.fieldOfView = baseFOV;
+
+
+        //My Addition
+        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>(); // Reference to the stormlight script
+        enemySpawnerScript = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
+        //
     }
 
     void Update()
@@ -67,7 +84,7 @@ public class PlayerFlight : MonoBehaviour
         // S: hover if moving, backward if stopped
         if (key.sKey.wasPressedThisFrame)
         {
-            bool isMoving = rb.velocity.sqrMagnitude > (stillThreshold * stillThreshold);
+            bool isMoving = rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold);
 
             if (isMoving)
             {
@@ -75,7 +92,7 @@ public class PlayerFlight : MonoBehaviour
                 hovering = true;
                 moveDirection = Vector3.zero;
                 currentSpeed = 0f;
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
             else
@@ -104,36 +121,41 @@ public class PlayerFlight : MonoBehaviour
         Vector3 sideInput = new Vector3(x, y, 0f);
         if (sideInput.sqrMagnitude > 1f) sideInput.Normalize();
 
-        
+
         Vector3 forwardMovement = moveDirection * currentSpeed;
         Vector3 strafeMovement = new Vector3(sideInput.x, sideInput.y, 0f) * baseSpeed;
 
-       
+
         moveDirection = (forwardMovement + strafeMovement).normalized;
 
         //fov adjustment
         if (playerCamera != null)
         {
-            
-            float actualSpeed = rb.velocity.magnitude;
 
-            
+            float actualSpeed = rb.linearVelocity.magnitude;
+
+
             displayedSpeed = Mathf.Lerp(displayedSpeed, actualSpeed, Time.deltaTime * fovLerpSpeed);
 
-            
+
             float speedPercent = Mathf.Clamp01(displayedSpeed / Mathf.Max(0.01f, fovAtSpeed));
 
-            
+
             float targetFOV = Mathf.Lerp(baseFOV, maxFOV, speedPercent);
             playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
         }
+
+
+        //My addition
+        distance = (int)transform.position.z;
+        //
     }
 
     void FixedUpdate()
     {
         if (hovering)
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             return;
         }
 
@@ -152,8 +174,40 @@ public class PlayerFlight : MonoBehaviour
         Debug.Log("Collided with " + collision.gameObject.name);
     }
 
+
+    /* I commented this out as I added on trigger below
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered trigger: " + other.name);
+    }
+    */
+
+
+
+    //My Addition
+    private void OnTriggerEnter(Collider collision)
+    {
+
+        if (collision.tag == "Storm") //Pushes player towards the ground if the player enters a storm
+        {
+            Debug.Log("StormActive");
+            rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
+
+        }
+
+        if (collision.tag == "Orb") // if player collides with stormlight orb they regenerate to max
+        {
+            //Debug.Log("stormlight orb claimed");
+            stormLightScript.stormLightEnergy = 100;
+            collision.gameObject.SetActive(false);
+        }
+        if (collision.tag == "Enemy")
+        {
+            kills += 1;
+        }
+        if (collision.tag == "Level2") 
+        { 
+            enemySpawnerScript.LevelTwoEnemies();
+        }
     }
 }

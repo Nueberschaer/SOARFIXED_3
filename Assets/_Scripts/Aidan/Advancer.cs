@@ -13,6 +13,6 @@ public class Advancer : Enemy
     // Update is called once per frame
     void Update()
     {
-        transform.position += new Vector3(1, 0, 0) * speed * Time.deltaTime;
+        transform.position += new Vector3(0, 0, 1) * speed * Time.deltaTime;
     }
 }
