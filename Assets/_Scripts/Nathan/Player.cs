@@ -23,8 +23,8 @@ public class PlayerFlight : MonoBehaviour
 
 
     public float baseSpeed = 100f; // was 10
-    public float speedIncrement = 25f; // was 3
-    public float maxSpeed = 250f;// was 20
+    public float speedIncrement = 50f; // was 3
+    public float maxSpeed = 1000f;// was 20
     public float stillThreshold = 0.05f;
 
     private Rigidbody rb;
