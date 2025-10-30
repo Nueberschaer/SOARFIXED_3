@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
     //My addition
     public int distance = 0;
-    private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
+    private float stormSpeed = -500f; //speed at which the storm pushes the player towards the ground
     StormLight stormLightScript;
     EnemySpawner enemySpawnerScript;
     //
@@ -63,7 +64,7 @@ public class PlayerFlight : MonoBehaviour
         var key = Keyboard.current;
 
         // W: forward movement toggle & speed increase
-        if (key.wKey.wasPressedThisFrame)
+        if (key.wKey.wasPressedThisFrame && stormLightScript.stormLightEnergy >= 0) // ADDITION added restriction to movement if stormlight is out
         {
             if (moveDirection == Vector3.forward)
             {
@@ -78,7 +79,7 @@ public class PlayerFlight : MonoBehaviour
         }
 
         // S: hover if moving, backward if stopped
-        if (key.sKey.wasPressedThisFrame)
+        if (key.sKey.wasPressedThisFrame && stormLightScript.stormLightEnergy >= 0)  // ADDITION added restriction to movement if stormlight is out
         {
             bool isMoving = rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold);
 
@@ -107,12 +108,14 @@ public class PlayerFlight : MonoBehaviour
             }
         }
 
+        // ADDITION Added restriction to movement if stormlight is empty
+
         // Lateral/vertical input
         float x = 0f, y = 0f;
-        if (key.aKey.isPressed) x -= 1f;
-        if (key.dKey.isPressed) x += 1f;
-        if (key.spaceKey.isPressed) y += 1f;
-        if (key.leftShiftKey.isPressed) y -= 1f;
+        if (key.aKey.isPressed && stormLightScript.stormLightEnergy >= 0) x -= 1f;
+        if (key.dKey.isPressed && stormLightScript.stormLightEnergy >= 0) x += 1f;
+        if (key.spaceKey.isPressed && stormLightScript.stormLightEnergy >= 0) y += 1f;
+        if (key.leftShiftKey.isPressed && stormLightScript.stormLightEnergy >= 0) y -= 1f;
 
         Vector3 sideInput = new Vector3(x, y, 0f);
         if (sideInput.sqrMagnitude > 1f) sideInput.Normalize();
@@ -157,6 +160,11 @@ public class PlayerFlight : MonoBehaviour
 
         // Apply acceleration
         rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
+
+
+        //ADDITION
+        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -20, 0);
+        if (transform.position.y <= -300) SceneManager.LoadScene(2);
     }
 
     private void IncreaseSpeed()
@@ -181,7 +189,7 @@ public class PlayerFlight : MonoBehaviour
         if (other.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
             Debug.Log("StormActive");
-            rb.AddForce(0, stormSpeed, (float)ForceMode.VelocityChange, 0);
+            rb.AddForce(0, stormSpeed, 0);
 
         }
 

@@ -40,9 +40,12 @@ public class PauseMenu : MonoBehaviour
 
     public void Play()
     {
+        Debug.Log("PLAYSTART");
         PauseMenuCanvas.SetActive(false);
         Time.timeScale = 1f;
+        Debug.Log("Time.TimeScale =" + Time.timeScale);
         Paused = false;
+        Debug.Log("PLAYEND");
     }
 
     public void MainMenuButton()

@@ -13,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     Vector3 levelFourSpawnPosition;
     Vector3 levelFiveSpawnPosition;
 
-    private int spawnCount = 300;
+    private int spawnCount = 150;
     
 
     //boundaries of enemy spawning
@@ -93,7 +93,7 @@ public class EnemySpawner : MonoBehaviour
     {
         int luckyNumber = Random.Range(0, 100); //selects between fused and advancer 75% chance of choosing fused.
 
-        if (luckyNumber < 75)
+        if (luckyNumber < 60)
         {
             randomEnemy = fused;
         }

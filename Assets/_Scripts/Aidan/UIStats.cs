@@ -6,12 +6,12 @@ public class UIStats : MonoBehaviour
     public TextMeshProUGUI distanceText;
     public TextMeshProUGUI killsText;
     private PlayerFlight playerScript;
-    private Enemy enemyScript;
+    private Sword swordScript;
 
     void Start()
     {
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFlight>(); //Reference to the player script
-        enemyScript = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+        swordScript = GameObject.FindGameObjectWithTag("Sword").GetComponent<Sword>(); //Reference to the player script
         
     }
 
@@ -29,7 +29,7 @@ public class UIStats : MonoBehaviour
 
     private void KillsDisplay()
     {
-        int kills = enemyScript.kills;
+        int kills = swordScript.kills;
         killsText.text = kills.ToString();
     }
 }
