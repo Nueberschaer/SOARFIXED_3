@@ -21,9 +21,9 @@ public class PlayerFlight : MonoBehaviour
     public float fovAtSpeed = 20f;
 
 
-    public float baseSpeed = 10f;
-    public float speedIncrement = 3f;
-    public float maxSpeed = 20f;
+    public float baseSpeed = 100f; // was 10
+    public float speedIncrement = 25f; // was 3
+    public float maxSpeed = 250f;// was 20
     public float stillThreshold = 0.05f;
 
     private Rigidbody rb;
