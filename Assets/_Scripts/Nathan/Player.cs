@@ -123,7 +123,7 @@ public class PlayerFlight : MonoBehaviour
 
 
         Vector3 forwardMovement = moveDirection * currentSpeed;
-        Vector3 strafeMovement = new Vector3(sideInput.x, sideInput.y, 0f) * baseSpeed;
+        Vector3 strafeMovement = new Vector3(sideInput.x, sideInput.y, 0f) * currentSpeed;
 
 
         moveDirection = (forwardMovement + strafeMovement).normalized;
