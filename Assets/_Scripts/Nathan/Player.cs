@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -38,7 +39,7 @@ public class PlayerFlight : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.linearDamping = 1f;
+        rb.linearDamping = 0.1f;
         rb.angularDamping = 2f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
