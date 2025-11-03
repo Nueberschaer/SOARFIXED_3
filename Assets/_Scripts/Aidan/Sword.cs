@@ -6,6 +6,6 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Enemy") kills += 1;
+        if (other.gameObject.tag == "KillDetection") kills += 1;
     }
 }

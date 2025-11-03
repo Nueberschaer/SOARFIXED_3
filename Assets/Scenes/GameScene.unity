@@ -989,6 +989,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   fused: {fileID: 5798399231532957160, guid: d7db36958c42df1438f842b0bc570f63, type: 3}
   advancer: {fileID: 3500904165075449634, guid: c42072a07fd961849a1cdb14f927df9e, type: 3}
+  follower: {fileID: 7220405734681799863, guid: 8f90e61090735c840b0f080ff62540d1, type: 3}
 --- !u!1001 &1556991791
 PrefabInstance:
   m_ObjectHideFlags: 0

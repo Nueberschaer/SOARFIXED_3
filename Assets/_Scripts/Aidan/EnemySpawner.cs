@@ -5,6 +5,7 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject fused;
     public GameObject advancer;
+    public GameObject follower;
 
     private GameObject randomEnemy;
     Vector3 levelOneSpawnPosition;
@@ -93,13 +94,11 @@ public class EnemySpawner : MonoBehaviour
     {
         int luckyNumber = Random.Range(0, 100); //selects between fused and advancer 75% chance of choosing fused.
 
-        if (luckyNumber < 60)
-        {
-            randomEnemy = fused;
-        }
-        else
-        {
-            randomEnemy = advancer;
-        }
+        if (luckyNumber <= 50) randomEnemy = fused;
+
+        else if (luckyNumber > 50 && luckyNumber < 70) randomEnemy = follower;
+
+        else  randomEnemy = advancer;
+
     }
 }

@@ -3,16 +3,16 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Rigidbody rb;
-    private GameObject killDetector;
-    private PlayerFlight playerFlightScript;
-    StormLight stormLightScript;
+    protected GameObject killDetector;
+    protected PlayerFlight playerFlightScript;
+    protected StormLight stormLightScript;
 
-    private int collisionSpeed = 2000;
+    protected int collisionSpeed = 2000;
 
     private void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        killDetector = transform.Find("KillDetection").gameObject;
+        killDetector = GameObject.FindGameObjectWithTag("KillDetection").gameObject;
         playerFlightScript = GameObject.Find("Player").GetComponent<PlayerFlight>();
         stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>();
 

@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 6717139154330776431}
   m_Layer: 0
   m_Name: KillDetection
-  m_TagString: Enemy
+  m_TagString: KillDetection
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

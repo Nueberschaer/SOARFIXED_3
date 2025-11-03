@@ -17,6 +17,7 @@ TagManager:
   - Level4
   - Level5
   - Body
+  - KillDetection
   layers:
   - Default
   - TransparentFX
