@@ -13,36 +13,53 @@ public class PlayerFlight : MonoBehaviour
     EnemySpawner enemySpawnerScript;
     //
 
-
-
     public Camera playerCamera;
     public float baseFOV = 60f;
     public float maxFOV = 90f;
-    public float fovLerpSpeed = 5f;
-    public float fovAtSpeed = 20f;
+    public float fovLerpSpeed = 3f;
+    public float fovAtSpeed = 50f;
 
-
-    public float baseSpeed = 100f; // was 10
-    public float speedIncrement = 50f; // was 3
-    public float maxSpeed = 1000f;// was 20
-    public float stillThreshold = 0.05f;
+    public float baseSpeed = 50f; // was 10
+    public float speedIncrement = 20f; // was 3
+    public float maxSpeed = 250f;// was 20
+    public float stillThreshold = 0.2f;
 
     private Rigidbody rb;
     private Vector3 moveDirection = Vector3.zero;
     private float currentSpeed = 0f;
     private bool hovering = false;
-
+    private bool isMovingLeft = false;
+    private bool isMovingRight = false;
+    private bool isMovingUp = false;
+    private bool isMovingDown = false;
 
     private float displayedSpeed;
+
+    
+    public float hoverBrake = 6f;          // how quickly S brakes you to hover
+    public float accelPerSecond = 125f;    // how fast speed ramps up/down
+
+    //Mouse Look
+    public float mouseSensitivity = 80f;   
+    public float minPitch = -80f;
+    public float maxPitch = 80f;
+    public bool invertY = false;
+    public bool lockCursor = true;
+
+    private float camYaw;
+    private float camPitch;
+
+    private bool mouseLookActive = false;      
+    private float ignoreMouseUntilTime = 0f;   
+    
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.linearDamping = 0.1f;
-        rb.angularDamping = 2f;
+        rb.linearDamping = 0.5f;
+        rb.angularDamping = 4f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-
 
         if (playerCamera == null)
         {
@@ -51,10 +68,16 @@ public class PlayerFlight : MonoBehaviour
         }
 
         if (playerCamera != null)
+        {
             playerCamera.fieldOfView = baseFOV;
 
+            
+
+            SetCursorLocked(lockCursor); 
+        }
+
         //Addition
-        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>(); // Reference to the stormlight script
+        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>();
         enemySpawnerScript = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
         //
     }
@@ -64,87 +87,93 @@ public class PlayerFlight : MonoBehaviour
         if (Keyboard.current == null) return;
         var key = Keyboard.current;
 
-        // W: forward movement toggle & speed increase
-        if (key.wKey.wasPressedThisFrame && stormLightScript.stormLightEnergy >= 0) // ADDITION added restriction to movement if stormlight is out
+        
+        if (playerCamera != null && Mouse.current != null && Cursor.lockState == CursorLockMode.Locked)
         {
-            if (moveDirection == Vector3.forward)
+            
+            if (Time.unscaledTime >= ignoreMouseUntilTime)
             {
-                IncreaseSpeed();
-            }
-            else
-            {
-                hovering = false;
-                moveDirection = Vector3.forward;
-                currentSpeed = baseSpeed;
-            }
-        }
+                Vector2 md = Mouse.current.delta.ReadValue();
 
-        // S: hover if moving, backward if stopped
-        if (key.sKey.wasPressedThisFrame && stormLightScript.stormLightEnergy >= 0)  // ADDITION added restriction to movement if stormlight is out
-        {
-            bool isMoving = rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold);
-
-            if (isMoving)
-            {
-                // Hover
-                hovering = true;
-                moveDirection = Vector3.zero;
-                currentSpeed = 0f;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-            else
-            {
-                // Backward movement toggle & speed increase
-                hovering = false;
-                if (moveDirection == Vector3.back)
+                
+                if (!mouseLookActive)
                 {
-                    IncreaseSpeed();
+                    if (md.sqrMagnitude > 0.000001f)
+                    {
+                        Vector3 e = playerCamera.transform.rotation.eulerAngles;
+                        camYaw = e.y;
+                        
+                        float px = e.x; if (px > 180f) px -= 360f;
+                        camPitch = px;
+                        mouseLookActive = true;
+                    }
                 }
-                else
+
+                if (mouseLookActive)
                 {
-                    moveDirection = Vector3.back;
-                    currentSpeed = baseSpeed;
+                    float s = mouseSensitivity * Time.unscaledDeltaTime;
+                    camYaw += md.x * s;
+                    float dy = (invertY ? md.y : -md.y) * s; 
+                    camPitch = Mathf.Clamp(camPitch + dy, minPitch, maxPitch);
+                    playerCamera.transform.rotation = Quaternion.Euler(camPitch, camYaw, 0f);
                 }
             }
         }
 
-        // ADDITION Added restriction to movement if stormlight is empty
+       
+        if (key.escapeKey.wasPressedThisFrame)
+        {
+            lockCursor = !lockCursor;
+            SetCursorLocked(lockCursor);
+        }
+       
 
-        // Lateral/vertical input
-        float x = 0f, y = 0f;
+        
+        Vector3 v = rb.linearVelocity;
+        isMovingLeft = v.x < -stillThreshold;
+        isMovingRight = v.x > stillThreshold;
+        isMovingUp = v.y > stillThreshold;
+        isMovingDown = v.y < -stillThreshold;
+
+        float x = 0f, y = 0f, z = 0f;
+
         if (key.aKey.isPressed && stormLightScript.stormLightEnergy >= 0) x -= 1f;
         if (key.dKey.isPressed && stormLightScript.stormLightEnergy >= 0) x += 1f;
         if (key.spaceKey.isPressed && stormLightScript.stormLightEnergy >= 0) y += 1f;
         if (key.leftShiftKey.isPressed && stormLightScript.stormLightEnergy >= 0) y -= 1f;
+        if (key.wKey.isPressed && stormLightScript.stormLightEnergy >= 0) z += 1f;
 
-        Vector3 sideInput = new Vector3(x, y, 0f);
-        if (sideInput.sqrMagnitude > 1f) sideInput.Normalize();
+        Vector3 desiredInput = new Vector3(x, y, z);
+        if (desiredInput.sqrMagnitude > 1f) desiredInput.Normalize();
 
-
-        Vector3 forwardMovement = moveDirection * currentSpeed;
-        Vector3 strafeMovement = new Vector3(sideInput.x, sideInput.y, 0f) * currentSpeed;
-
-
-        moveDirection = (forwardMovement + strafeMovement).normalized;
+        // smooth hovering logic:
+        bool sPressed = key.sKey.isPressed && stormLightScript.stormLightEnergy >= 0;
+        if (sPressed && rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold))
+        {
+            hovering = true;
+            moveDirection = Vector3.zero;
+        }
+        else
+        {
+            if (desiredInput.sqrMagnitude > 0f)
+            {
+                hovering = false;
+                moveDirection = desiredInput;
+            }
+        }
+        float targetSpeed = (hovering || desiredInput.sqrMagnitude == 0f) ? 0f : baseSpeed;
+        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelPerSecond * Time.deltaTime);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
 
         //fov adjustment
         if (playerCamera != null)
         {
-
             float actualSpeed = rb.linearVelocity.magnitude;
-
-
             displayedSpeed = Mathf.Lerp(displayedSpeed, actualSpeed, Time.deltaTime * fovLerpSpeed);
-
-
             float speedPercent = Mathf.Clamp01(displayedSpeed / Mathf.Max(0.01f, fovAtSpeed));
-
-
             float targetFOV = Mathf.Lerp(baseFOV, maxFOV, speedPercent);
             playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
         }
-
 
         //My addition
         distance = (int)transform.position.z;
@@ -155,17 +184,23 @@ public class PlayerFlight : MonoBehaviour
     {
         if (hovering)
         {
-            rb.linearVelocity = Vector3.zero;
+            // Smoothly brake toward a hover instead of snapping to zero
+            rb.AddForce(-rb.linearVelocity * hoverBrake, ForceMode.Acceleration);
             return;
         }
 
-        // Apply acceleration
+        // Apply acceleration 
         rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
-
 
         //ADDITION
         if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -20, 0);
-        if (transform.position.y <= -300) SceneManager.LoadScene(2);
+
+        
+        if (transform.position.y <= -300)
+        {
+            SetCursorLocked(false); // make sure cursor is available for the next scene
+            SceneManager.LoadScene(2);
+        }
     }
 
     private void IncreaseSpeed()
@@ -177,21 +212,15 @@ public class PlayerFlight : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collided with " + collision.gameObject.name);
-
-
     }
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Entered trigger: " + other.name);
-
-
         //Addition
         if (other.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
             Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, 0);
-
         }
 
         if (other.tag == "Orb") // if player collides with stormlight orb they regenerate to max
@@ -219,5 +248,24 @@ public class PlayerFlight : MonoBehaviour
             enemySpawnerScript.LevelFiveEnemies();
         }
         //
+    }
+
+    void OnDisable()
+    {
+        SetCursorLocked(false);
+    }
+
+    
+    private void SetCursorLocked(bool locked)
+    {
+        Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !locked;
+
+        
+        if (locked)
+        {
+            ignoreMouseUntilTime = Time.unscaledTime + 0.1f; 
+            mouseLookActive = false;
+        }
     }
 }
