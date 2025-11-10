@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     protected PlayerFlight playerFlightScript;
     protected StormLight stormLightScript;
 
-    protected int collisionSpeed = 2000;
+    protected int collisionSpeed = 5000;
 
     private void Awake()
     {
