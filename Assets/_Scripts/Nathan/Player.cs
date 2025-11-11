@@ -8,7 +8,7 @@ public class PlayerFlight : MonoBehaviour
 {
     //My addition
     public int distance = 0;
-    private float stormSpeed = -500f; //speed at which the storm pushes the player towards the ground
+    private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
     StormLight stormLightScript;
     EnemySpawner enemySpawnerScript;
     //
