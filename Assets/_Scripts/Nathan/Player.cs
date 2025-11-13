@@ -193,7 +193,7 @@ public class PlayerFlight : MonoBehaviour
         rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
 
         //ADDITION
-        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -20, 0);
+        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0);
 
         
         if (transform.position.y <= -300)
