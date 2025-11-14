@@ -64,9 +64,10 @@ GameObject:
   - component: {fileID: 1059986017898731202}
   - component: {fileID: 5681317077768259469}
   - component: {fileID: 2644857847666533473}
+  - component: {fileID: 7311858604171311734}
   m_Layer: 0
   m_Name: Advancer
-  m_TagString: Enemy
+  m_TagString: Advancer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,6 +129,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Advancer
   rb: {fileID: 0}
+--- !u!65 &7311858604171311734
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370962020530237433}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 8, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &8753790596849526135
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -26,7 +26,8 @@ public class StormLight : MonoBehaviour
 
     private void StormLightReduction() // reduce stormlight over time
     {
-        if (player.transform.position.y > _reductionHeight) stormLightUsage = 5;
+        if (player.transform.position.y < _reductionHeight) stormLightUsage = 1;
+        if (player.transform.position.y > _reductionHeight && player.transform.position.y < _reductionHeightSuper) stormLightUsage = 5;
         if (player.transform.position.y > _reductionHeightSuper) stormLightUsage = 10;
 
         stormLightEnergy = Mathf.Clamp(stormLightEnergy, 0, 100); //Stormlight energy can only be between 0-100

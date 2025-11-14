@@ -12,7 +12,7 @@ public class Follower : MonoBehaviour
     protected PlayerFlight playerFlightScript;
     protected StormLight stormLightScript;
 
-    protected int collisionSpeed = 2000;
+    protected int collisionSpeed = 4000;
 
     private void Awake()
     {
@@ -40,19 +40,20 @@ public class Follower : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         rb.useGravity = true;
-        killDetector.SetActive(false);
         if (other.gameObject.tag == "Floor")
         {
             gameObject.SetActive(false);
         }
         if (other.gameObject.tag == "Sword")
         {
+            Debug.Log("Killed");
+            killDetector.SetActive(false);
             rb.AddForce(0, -50, collisionSpeed);
             Debug.Log("Sword");
         }
         if (other.gameObject.tag == "Body")
         {
-            stormLightScript.stormLightEnergy -= 50;
+            stormLightScript.stormLightEnergy -= 15;
             Debug.Log("BODY");
         }
     }

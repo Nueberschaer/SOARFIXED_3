@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     Vector3 levelFourSpawnPosition;
     Vector3 levelFiveSpawnPosition;
 
-    private int spawnCount = 150;
+    private int spawnCount = 125;
     
 
     //boundaries of enemy spawning
@@ -48,6 +48,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void LevelTwoEnemies()
     {
+        spawnCount = 75;
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
@@ -59,6 +60,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void LevelThreeEnemies()
     {
+        spawnCount = 75;
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
@@ -70,6 +72,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void LevelFourEnemies()
     {
+        spawnCount = 100;
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
@@ -81,6 +84,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void LevelFiveEnemies()
     {
+        spawnCount = 100;
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type

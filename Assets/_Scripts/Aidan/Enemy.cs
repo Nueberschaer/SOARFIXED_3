@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     protected PlayerFlight playerFlightScript;
     protected StormLight stormLightScript;
 
-    protected int collisionSpeed = 5000;
+    protected int collisionSpeed = 4000;
 
     private void Awake()
     {
@@ -20,16 +20,18 @@ public class Enemy : MonoBehaviour
 
         void OnTriggerEnter(Collider other)
      {
+        
          rb.useGravity = true;
-         killDetector.SetActive(false);
          if (other.gameObject.tag == "Floor")
          {
              gameObject.SetActive(false);
          }
          if (other.gameObject.tag == "Sword")
          {
-             rb.AddForce(0, -50, collisionSpeed);
-             Debug.Log("Sword");
+            Debug.Log("KILLEDD");
+            killDetector.SetActive(false);
+            rb.AddForce(0, -50, collisionSpeed);
+             Debug.Log("Sworded");
          }
          if (other.gameObject.tag == "Body")
          {

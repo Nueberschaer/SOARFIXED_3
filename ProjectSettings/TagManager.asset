@@ -20,6 +20,9 @@ TagManager:
   - KillDetection
   - Player Camera
   - PlayerCamera
+  - Fused
+  - Advancer
+  - Follower
   layers:
   - Default
   - TransparentFX
