@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour
          }
          if (other.gameObject.tag == "Body")
          {
-             stormLightScript.stormLightEnergy -= 50;
+             stormLightScript.stormLightEnergy -= 15;
              Debug.Log("BODY");
          }
      }

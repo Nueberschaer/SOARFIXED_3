@@ -18,6 +18,8 @@ TagManager:
   - Level5
   - Body
   - KillDetection
+  - Player Camera
+  - PlayerCamera
   layers:
   - Default
   - TransparentFX

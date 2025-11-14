@@ -40,7 +40,7 @@ public class PlayerFlight : MonoBehaviour
     public float accelPerSecond = 125f;    // how fast speed ramps up/down
 
     //Mouse Look
-    public float mouseSensitivity = 80f;   
+    public float mouseSensitivity = 40f;   
     public float minPitch = -80f;
     public float maxPitch = 80f;
     public bool invertY = false;
@@ -60,17 +60,20 @@ public class PlayerFlight : MonoBehaviour
         rb.linearDamping = 0.5f;
         rb.angularDamping = 4f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-
-        if (playerCamera == null)
+        GameObject cam = GameObject.FindGameObjectWithTag("PlayerCamera");
+        if (cam != null) playerCamera = cam.GetComponent<Camera>();
+        playerCamera = cam.GetComponent<Camera>();
+        /*if (playerCamera == null)
         {
             playerCamera = GetComponentInChildren<Camera>();
             if (playerCamera == null) playerCamera = Camera.main;
-        }
+            Debug.Log("camera: " + playerCamera.name);
+        }*/
 
         if (playerCamera != null)
         {
             playerCamera.fieldOfView = baseFOV;
-
+            Debug.Log("camera: " + playerCamera);
             
 
             SetCursorLocked(lockCursor); 
@@ -111,7 +114,7 @@ public class PlayerFlight : MonoBehaviour
 
                 if (mouseLookActive)
                 {
-                    float s = mouseSensitivity * Time.unscaledDeltaTime;
+                    float s = mouseSensitivity * Time.deltaTime;
                     camYaw += md.x * s;
                     float dy = (invertY ? md.y : -md.y) * s; 
                     camPitch = Mathf.Clamp(camPitch + dy, minPitch, maxPitch);
@@ -247,6 +250,8 @@ public class PlayerFlight : MonoBehaviour
         {
             enemySpawnerScript.LevelFiveEnemies();
         }
+
+
         //
     }
 
