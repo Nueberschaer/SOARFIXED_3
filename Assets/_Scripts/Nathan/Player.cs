@@ -1,4 +1,6 @@
 using JetBrains.Annotations;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -199,10 +201,9 @@ public class PlayerFlight : MonoBehaviour
         if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0);
 
         
-        if (transform.position.y <= -300)
+        if (stormLightScript.stormLightEnergy <= 0)
         {
-            SetCursorLocked(false); // make sure cursor is available for the next scene
-            SceneManager.LoadScene(2);
+            StartCoroutine(Death());
         }
     }
 
@@ -210,6 +211,16 @@ public class PlayerFlight : MonoBehaviour
     {
         currentSpeed += speedIncrement;
         if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
+    }
+
+    private IEnumerator Death()
+    {
+        yield return new WaitForSeconds(3);
+        if (stormLightScript.stormLightEnergy <= 0)
+        {
+            SetCursorLocked(false); // make sure cursor is available for the next scene
+            SceneManager.LoadScene(2);
+        }
     }
 
     void OnCollisionEnter(Collision collision)
