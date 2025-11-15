@@ -2766,7 +2766,6 @@ GameObject:
   - component: {fileID: 1246149670}
   - component: {fileID: 1246149672}
   - component: {fileID: 1246149671}
-  - component: {fileID: 1246149673}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2848,27 +2847,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!65 &1246149673
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1246149669}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.074768, y: 3.809692, z: 0.6797791}
-  m_Center: {x: 2.962616, y: -0.02746582, z: -2.16011}
 --- !u!1 &1284366769
 GameObject:
   m_ObjectHideFlags: 0
@@ -4502,6 +4480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1811177508}
   - component: {fileID: 1811177509}
+  - component: {fileID: 1811177510}
   m_Layer: 0
   m_Name: Body
   m_TagString: Body
@@ -4546,6 +4525,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0747681, y: 3.8096924, z: 0.67977905}
   m_Center: {x: 2.962616, y: -0.02746582, z: -2.1601105}
+--- !u!65 &1811177510
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811177507}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.074768, y: 3.809692, z: 0.6797791}
+  m_Center: {x: 2.962616, y: -0.02746582, z: -2.16011}
 --- !u!1 &1847365603
 GameObject:
   m_ObjectHideFlags: 0

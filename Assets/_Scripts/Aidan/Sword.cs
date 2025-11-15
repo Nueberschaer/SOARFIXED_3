@@ -11,21 +11,20 @@ public class Sword : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "KillDetection") kills += 1;
         if (other.gameObject.tag == "Fused")
         {
-            Debug.Log("Fused");
             _storLightScript.stormLightEnergy += 5;
+            kills += 1;
         }
         if (other.gameObject.tag == "Advancer")
         {
-            Debug.Log("Advancer");
             _storLightScript.stormLightEnergy += 10;
+            kills += 1;
         }
         if (other.gameObject.tag == "Follower")
         {
-            Debug.Log("Follower");
             _storLightScript.stormLightEnergy += 15;
+            kills += 1;
         }
     }
 }

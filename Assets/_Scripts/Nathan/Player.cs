@@ -233,13 +233,11 @@ public class PlayerFlight : MonoBehaviour
         //Addition
         if (other.tag == "Storm") //Pushes player towards the ground if the player enters a storm
         {
-            Debug.Log("StormActive");
             rb.AddForce(0, stormSpeed, 0);
         }
 
         if (other.tag == "Orb") // if player collides with stormlight orb they regenerate to max
         {
-            Debug.Log("stormlight orb claimed");
             stormLightScript.stormLightEnergy = 100;
             other.gameObject.SetActive(false);
         }
