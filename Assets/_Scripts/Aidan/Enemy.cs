@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
          if (other.gameObject.tag == "Body")
          {
             StartCoroutine(Invulnerability());
-             stormLightScript.stormLightEnergy -= 15;
+             stormLightScript.stormLightEnergy -= 25;
          }
      }
 

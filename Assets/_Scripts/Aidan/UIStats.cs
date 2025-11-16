@@ -23,7 +23,7 @@ public class UIStats : MonoBehaviour
 
     private void DistanceDisplay()
     {
-        int distance = playerScript.distance;
+        int distance = playerScript.distance += 273; // players starting position is -273
         distanceText.text = distance.ToString();
     }
 

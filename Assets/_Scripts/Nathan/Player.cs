@@ -201,7 +201,7 @@ public class PlayerFlight : MonoBehaviour
         if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0);
 
         
-        if (stormLightScript.stormLightEnergy <= 0)
+        if (stormLightScript.stormLightEnergy <= 0 && transform.position.z <= 6200)
         {
             StartCoroutine(Death());
         }
