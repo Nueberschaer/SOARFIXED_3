@@ -199,12 +199,14 @@ public class PlayerFlight : MonoBehaviour
         rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
 
         //ADDITION
-        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0);
+        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0); // Fall when out of stormlight
 
         
-        if (stormLightScript.stormLightEnergy <= 0 && transform.position.z <= 16200) StartCoroutine(Death());
+        if (stormLightScript.stormLightEnergy <= 0 && transform.position.z <= 16200) StartCoroutine(Death()); // Start death timer when out of stormlight
 
-        if (transform.position.z >= 16450) StartCoroutine(Winner());
+        if (transform.position.z >= 16450) StartCoroutine(Winner()); // Distance to win
+
+        if (transform.position.y <= -400) SceneManager.LoadScene(2); // if glitch out of bounds die when below this value
     }
 
     private void IncreaseSpeed()

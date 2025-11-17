@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
     protected Transform player;
     protected StormLight stormLightScript;
 
-    protected int collisionSpeed = 4000;
+    protected int collisionSpeed = 7500;
 
 
     private void Awake()
@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
          if (other.gameObject.tag == "Sword")
          {
             StartCoroutine(Invulnerability());
-            rb.AddForce(1000, -1000, collisionSpeed);
+            rb.AddForce(300, -1000, collisionSpeed);
          }
          if (other.gameObject.tag == "Body")
          {
