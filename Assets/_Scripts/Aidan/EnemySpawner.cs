@@ -72,7 +72,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void LevelFourEnemies()
     {
-        spawnCount = 100;
+        spawnCount = 75;
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type

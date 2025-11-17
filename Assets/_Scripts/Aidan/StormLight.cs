@@ -5,10 +5,10 @@ public class StormLight : MonoBehaviour
 {
 
     public float stormLightEnergy = 100f; //starting stormlight value
-    private float stormLightUsage = 1f; // how quickly the player loses stomlight
+    private float stormLightUsage = 2f; // how quickly the player loses stomlight
     public Image stormLightBar;
 
-    private int _reductionHeight = -235;
+    private int _reductionHeight = -243;
     private int _reductionHeightSuper = -100;
 
     private PlayerFlight player;
