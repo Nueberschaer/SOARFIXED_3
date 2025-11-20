@@ -50,6 +50,11 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenuButton()
     {
+        //Nathan Addition just for safety
+        Paused = false;
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 

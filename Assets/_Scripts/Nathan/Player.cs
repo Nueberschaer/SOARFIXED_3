@@ -9,12 +9,10 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
-    //My addition
     public int distance = 0;
-    private float stormSpeed = -10000f; //speed at which the storm pushes the player towards the ground
+    private float stormSpeed = -10000f;
     StormLight stormLightScript;
     EnemySpawner enemySpawnerScript;
-    //
 
     public Camera playerCamera;
     public float baseFOV = 60f;
@@ -22,39 +20,34 @@ public class PlayerFlight : MonoBehaviour
     public float fovLerpSpeed = 3f;
     public float fovAtSpeed = 50f;
 
-    public float baseSpeed = 50f; // was 10
-    public float speedIncrement = 20f; // was 3
-    public float maxSpeed = 250f;// was 20
+    public float baseSpeed = 50f;
+    public float speedIncrement = 20f;
+    public float maxSpeed = 250f;
     public float stillThreshold = 0.2f;
 
     private Rigidbody rb;
     private Vector3 moveDirection = Vector3.zero;
     private float currentSpeed = 0f;
     private bool hovering = false;
-    private bool isMovingLeft = false;
-    private bool isMovingRight = false;
-    private bool isMovingUp = false;
-    private bool isMovingDown = false;
-
     private float displayedSpeed;
 
-    
-    public float hoverBrake = 6f;          // how quickly S brakes you to hover
-    public float accelPerSecond = 125f;    // how fast speed ramps up/down
+    public float hoverBrake = 6f;
+    public float accelPerSecond = 125f;
 
-    //Mouse Look
-    public float mouseSensitivity = 40f;   
+    public float mouseSensitivity = 40f;
     public float minPitch = -80f;
     public float maxPitch = 80f;
     public bool invertY = false;
-    public bool lockCursor = true;
 
     private float camYaw;
     private float camPitch;
+    private float camRoll;
+    private float ignoreMouseUntilTime = 0f;
 
-    private bool mouseLookActive = false;      
-    private float ignoreMouseUntilTime = 0f;   
-    
+    private bool deathStarted, winStarted, loadingScene;
+    private static readonly WaitForSeconds Wait3 = new WaitForSeconds(3f);
+
+    private int skipMouseFrames = 0;
 
     void Awake()
     {
@@ -63,171 +56,172 @@ public class PlayerFlight : MonoBehaviour
         rb.linearDamping = 0.5f;
         rb.angularDamping = 4f;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-        GameObject cam = GameObject.FindGameObjectWithTag("PlayerCamera");
-        if (cam != null) playerCamera = cam.GetComponent<Camera>();
-        playerCamera = cam.GetComponent<Camera>();
-        /*if (playerCamera == null)
-        {
-            playerCamera = GetComponentInChildren<Camera>();
-            if (playerCamera == null) playerCamera = Camera.main;
-            Debug.Log("camera: " + playerCamera.name);
-        }*/
+
+        GameObject camGO = GameObject.FindGameObjectWithTag("PlayerCamera");
+        if (camGO != null)
+            playerCamera = camGO.GetComponent<Camera>();
+        if (playerCamera == null)
+            playerCamera = GetComponentInChildren<Camera>() ?? Camera.main;
 
         if (playerCamera != null)
         {
             playerCamera.fieldOfView = baseFOV;
-            Debug.Log("camera: " + playerCamera);
-            
-
-            SetCursorLocked(lockCursor); 
+            Transform t = playerCamera.transform;
+            Vector3 e = t.parent ? t.localEulerAngles : t.eulerAngles;
+            camYaw = e.y;
+            float px = e.x; if (px > 180f) px -= 360f;
+            camPitch = Mathf.Clamp(px, minPitch, maxPitch);
+            camRoll = e.z;
         }
 
-        //Addition
-        stormLightScript = GameObject.FindGameObjectWithTag("StormLight").GetComponent<StormLight>();
-        enemySpawnerScript = GameObject.FindGameObjectWithTag("EnemySpawner").GetComponent<EnemySpawner>();
-        //
+        var stormGO = GameObject.FindGameObjectWithTag("StormLight");
+        if (stormGO) stormLightScript = stormGO.GetComponent<StormLight>();
+        var spawnerGO = GameObject.FindGameObjectWithTag("EnemySpawner");
+        if (spawnerGO) enemySpawnerScript = spawnerGO.GetComponent<EnemySpawner>();
+
+        ignoreMouseUntilTime = Time.unscaledTime + 0.25f;
+    }
+
+    void Start()
+    {
+        StartCoroutine(InitialLock());
+    }
+
+    private IEnumerator InitialLock()
+    {
+        yield return null;
+        yield return new WaitForEndOfFrame();
+        if (Time.timeScale > 0f)
+        {
+            SetCursorLocked(true);
+            ignoreMouseUntilTime = Time.unscaledTime + 0.15f;
+            skipMouseFrames = 2;
+        }
     }
 
     void Update()
     {
         if (Keyboard.current == null) return;
-        var key = Keyboard.current;
 
-        
+        if (Time.timeScale == 0f)
+        {
+            if (Cursor.lockState != CursorLockMode.None) SetCursorLocked(false);
+        }
+        else
+        {
+            if (Cursor.lockState != CursorLockMode.Locked) SetCursorLocked(true);
+#if UNITY_EDITOR
+            if (Cursor.visible) Cursor.visible = false; // enforce hide in Editor play mode
+#endif
+        }
+
         if (playerCamera != null && Mouse.current != null && Cursor.lockState == CursorLockMode.Locked)
         {
-            
+            Transform t = playerCamera.transform;
+            Quaternion q = Quaternion.Euler(camPitch, camYaw, camRoll);
+            if (t.parent) t.localRotation = q; else t.rotation = q;
+
             if (Time.unscaledTime >= ignoreMouseUntilTime)
             {
-                Vector2 md = Mouse.current.delta.ReadValue();
-
-                
-                if (!mouseLookActive)
+                if (skipMouseFrames > 0)
                 {
-                    if (md.sqrMagnitude > 0.000001f)
-                    {
-                        Vector3 e = playerCamera.transform.rotation.eulerAngles;
-                        camYaw = e.y;
-                        
-                        float px = e.x; if (px > 180f) px -= 360f;
-                        camPitch = px;
-                        mouseLookActive = true;
-                    }
+                    _ = Mouse.current.delta.ReadValue();
+                    skipMouseFrames--;
                 }
-
-                if (mouseLookActive)
+                else
                 {
-                    float s = mouseSensitivity * Time.deltaTime;
+                    Vector2 md = Mouse.current.delta.ReadValue();
+                    float s = mouseSensitivity * 0.001f;
                     camYaw += md.x * s;
-                    float dy = (invertY ? md.y : -md.y) * s; 
+                    float dy = (invertY ? md.y : -md.y) * s;
                     camPitch = Mathf.Clamp(camPitch + dy, minPitch, maxPitch);
-                    playerCamera.transform.rotation = Quaternion.Euler(camPitch, camYaw, 0f);
                 }
             }
         }
 
-       
-        if (key.escapeKey.wasPressedThisFrame)
-        {
-            lockCursor = !lockCursor;
-            SetCursorLocked(lockCursor);
-        }
-       
-
-        
         Vector3 v = rb.linearVelocity;
-        isMovingLeft = v.x < -stillThreshold;
-        isMovingRight = v.x > stillThreshold;
-        isMovingUp = v.y > stillThreshold;
-        isMovingDown = v.y < -stillThreshold;
-
         float x = 0f, y = 0f, z = 0f;
-
-        if (key.aKey.isPressed && stormLightScript.stormLightEnergy >= 0) x -= 1f;
-        if (key.dKey.isPressed && stormLightScript.stormLightEnergy >= 0) x += 1f;
-        if (key.spaceKey.isPressed && stormLightScript.stormLightEnergy >= 0) y += 1f;
-        if (key.leftShiftKey.isPressed && stormLightScript.stormLightEnergy >= 0) y -= 1f;
-        if (key.wKey.isPressed && stormLightScript.stormLightEnergy >= 0) z += 1f;
+        if (Keyboard.current.aKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0)) x -= 1f;
+        if (Keyboard.current.dKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0)) x += 1f;
+        if (Keyboard.current.spaceKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0)) y += 1f;
+        if (Keyboard.current.leftShiftKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0)) y -= 1f;
+        if (Keyboard.current.wKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0)) z += 1f;
 
         Vector3 desiredInput = new Vector3(x, y, z);
         if (desiredInput.sqrMagnitude > 1f) desiredInput.Normalize();
 
-        // smooth hovering logic:
-        bool sPressed = key.sKey.isPressed && stormLightScript.stormLightEnergy >= 0;
+        bool sPressed = Keyboard.current.sKey.isPressed && (stormLightScript == null || stormLightScript.stormLightEnergy >= 0);
         if (sPressed && rb.linearVelocity.sqrMagnitude > (stillThreshold * stillThreshold))
         {
             hovering = true;
             moveDirection = Vector3.zero;
         }
-        else
+        else if (desiredInput.sqrMagnitude > 0f)
         {
-            if (desiredInput.sqrMagnitude > 0f)
-            {
-                hovering = false;
-                moveDirection = desiredInput;
-            }
-        }
-        float targetSpeed = (hovering || desiredInput.sqrMagnitude == 0f) ? 0f : baseSpeed;
-        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelPerSecond * Time.deltaTime);
-        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
-
-        //fov adjustment
-        if (playerCamera != null)
-        {
-            float actualSpeed = rb.linearVelocity.magnitude;
-            displayedSpeed = Mathf.Lerp(displayedSpeed, actualSpeed, Time.deltaTime * fovLerpSpeed);
-            float speedPercent = Mathf.Clamp01(displayedSpeed / Mathf.Max(0.01f, fovAtSpeed));
-            float targetFOV = Mathf.Lerp(baseFOV, maxFOV, speedPercent);
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
+            hovering = false;
+            moveDirection = desiredInput;
         }
 
-        //My addition
         distance = (int)transform.position.z;
-        //
     }
 
     void FixedUpdate()
     {
+        float targetSpeed = (hovering || moveDirection == Vector3.zero) ? 0f : baseSpeed;
+        currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelPerSecond * Time.fixedDeltaTime);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, maxSpeed);
+
         if (hovering)
-        {
-            // Smoothly brake toward a hover instead of snapping to zero
             rb.AddForce(-rb.linearVelocity * hoverBrake, ForceMode.Acceleration);
-            return;
+        else
+            rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
+
+        if (stormLightScript != null && stormLightScript.stormLightEnergy <= 0)
+            rb.AddForce(Vector3.down * 50f, ForceMode.Acceleration);
+
+        if (!deathStarted && stormLightScript != null &&
+            stormLightScript.stormLightEnergy <= 0 && transform.position.z <= 16200f)
+        {
+            deathStarted = true;
+            StartCoroutine(Death());
         }
 
-        // Apply acceleration 
-        rb.AddForce(moveDirection * currentSpeed, ForceMode.Acceleration);
+        if (!winStarted && transform.position.z >= 16450f)
+        {
+            winStarted = true;
+            StartCoroutine(Winner());
+        }
 
-        //ADDITION
-        if (stormLightScript.stormLightEnergy <= 0) rb.AddForce(0, -50, 0); // Fall when out of stormlight
-
-        
-        if (stormLightScript.stormLightEnergy <= 0 && transform.position.z <= 16200) StartCoroutine(Death()); // Start death timer when out of stormlight
-
-        if (transform.position.z >= 16450) StartCoroutine(Winner()); // Distance to win
-
-        if (transform.position.y <= -400) SceneManager.LoadScene(2); // if glitch out of bounds die when below this value
+        if (!loadingScene && transform.position.y <= -400f)
+        {
+            loadingScene = true;
+            SceneManager.LoadScene(2);
+        }
     }
 
-    private void IncreaseSpeed()
+    void LateUpdate()
     {
-        currentSpeed += speedIncrement;
-        if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
+        if (!playerCamera) return;
+        float actualSpeed = rb.linearVelocity.magnitude;
+        displayedSpeed = Mathf.Lerp(displayedSpeed, actualSpeed, Time.deltaTime * fovLerpSpeed);
+        float speedPercent = Mathf.Clamp01(displayedSpeed / Mathf.Max(0.01f, fovAtSpeed));
+        float targetFOV = Mathf.Lerp(baseFOV, maxFOV, speedPercent);
+        playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovLerpSpeed);
     }
 
     private IEnumerator Death()
     {
-        yield return new WaitForSeconds(3);
-        if (stormLightScript.stormLightEnergy <= 0)
+        yield return Wait3;
+        if (stormLightScript != null && stormLightScript.stormLightEnergy <= 0)
         {
-            SetCursorLocked(false); // make sure cursor is available for the next scene
+            SetCursorLocked(false);
             SceneManager.LoadScene(2);
         }
     }
 
     private IEnumerator Winner()
     {
-        yield return new WaitForSeconds(3);
+        yield return Wait3;
         SceneManager.LoadScene(3);
     }
 
@@ -238,38 +232,17 @@ public class PlayerFlight : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //Addition
-        if (other.tag == "Storm") //Pushes player towards the ground if the player enters a storm
+        if (other.CompareTag("Storm"))
+            rb.AddForce(0f, stormSpeed, 0f);
+        if (other.CompareTag("Orb"))
         {
-            rb.AddForce(0, stormSpeed, 0);
-        }
-
-        if (other.tag == "Orb") // if player collides with stormlight orb they regenerate to max
-        {
-            stormLightScript.stormLightEnergy = 100;
+            if (stormLightScript != null) stormLightScript.stormLightEnergy = 100;
             other.gameObject.SetActive(false);
         }
-
-        //EnemySpawning based on player reaching level distance
-        if (other.tag == "Level2")
-        {
-            enemySpawnerScript.LevelTwoEnemies();
-        }
-        if (other.tag == "Level3")
-        {
-            enemySpawnerScript.LevelThreeEnemies();
-        }
-        if (other.tag == "Level4")
-        {
-            enemySpawnerScript.LevelFourEnemies();
-        }
-        if (other.tag == "Level5")
-        {
-            enemySpawnerScript.LevelFiveEnemies();
-        }
-
-
-        //
+        if (other.CompareTag("Level2")) enemySpawnerScript?.LevelTwoEnemies();
+        if (other.CompareTag("Level3")) enemySpawnerScript?.LevelThreeEnemies();
+        if (other.CompareTag("Level4")) enemySpawnerScript?.LevelFourEnemies();
+        if (other.CompareTag("Level5")) enemySpawnerScript?.LevelFiveEnemies();
     }
 
     void OnDisable()
@@ -277,17 +250,44 @@ public class PlayerFlight : MonoBehaviour
         SetCursorLocked(false);
     }
 
+    public void OnApplicationFocus(bool hasFocus)
+    {
+        if (hasFocus && Time.timeScale > 0f && Cursor.lockState != CursorLockMode.Locked)
+            SetCursorLocked(true);
+        if (!hasFocus && Cursor.lockState != CursorLockMode.None && Time.timeScale == 0f)
+            SetCursorLocked(false);
+    }
+
+    
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        SetCursorLocked(false);
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        SetCursorLocked(true);
+        ignoreMouseUntilTime = Time.unscaledTime + 0.15f;
+        skipMouseFrames = 2;
+    }
     
     private void SetCursorLocked(bool locked)
     {
         Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !locked;
-
-        
         if (locked)
         {
-            ignoreMouseUntilTime = Time.unscaledTime + 0.1f; 
-            mouseLookActive = false;
+            ignoreMouseUntilTime = Time.unscaledTime + 0.15f;
+            skipMouseFrames = 2;
+#if ENABLE_INPUT_SYSTEM
+            try { UnityEngine.InputSystem.InputSystem.ResetDevice(Mouse.current); } catch { }
+#endif
+        }
+        else
+        {
+            if (EventSystem.current) EventSystem.current.SetSelectedGameObject(null);
         }
     }
 }
