@@ -110,9 +110,9 @@ public class PlayerFlight : MonoBehaviour
         else
         {
             if (Cursor.lockState != CursorLockMode.Locked) SetCursorLocked(true);
-#if UNITY_EDITOR
-            if (Cursor.visible) Cursor.visible = false; // enforce hide in Editor play mode
-#endif
+            #if UNITY_EDITOR
+            if (Cursor.visible) Cursor.visible = false; 
+            #endif
         }
 
         if (playerCamera != null && Mouse.current != null && Cursor.lockState == CursorLockMode.Locked)
@@ -281,9 +281,9 @@ public class PlayerFlight : MonoBehaviour
         {
             ignoreMouseUntilTime = Time.unscaledTime + 0.15f;
             skipMouseFrames = 2;
-#if ENABLE_INPUT_SYSTEM
+            #if ENABLE_INPUT_SYSTEM
             try { UnityEngine.InputSystem.InputSystem.ResetDevice(Mouse.current); } catch { }
-#endif
+            #endif
         }
         else
         {
