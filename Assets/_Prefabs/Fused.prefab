@@ -76,6 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   rb: {fileID: 0}
   boxCollider: {fileID: 0}
+  popUpPrefab: {fileID: 2873154699221264692, guid: 7b5af8c9d66b9e041a0f107743cd35d6, type: 3}
 --- !u!1 &5863446563585655838
 GameObject:
   m_ObjectHideFlags: 0

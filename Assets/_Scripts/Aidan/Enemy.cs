@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
 
     protected int collisionSpeed = 7500;
 
+    public GameObject popUpPrefab;
+
 
     private void Awake()
     {
@@ -44,8 +46,9 @@ public class Enemy : MonoBehaviour
          }
          if (other.gameObject.tag == "Body")
          {
+            PopUp();
             StartCoroutine(Invulnerability());
-             stormLightScript.stormLightEnergy -= 30;
+            stormLightScript.stormLightEnergy -= 30;
          }
      }
 
@@ -54,5 +57,12 @@ public class Enemy : MonoBehaviour
         boxCollider.isTrigger = false;
         yield return new WaitForSeconds(2);
         boxCollider.isTrigger = true;
+    }
+
+    private void PopUp()
+    {
+        GameObject popUpObject = Instantiate(popUpPrefab);
+        popUpObject.GetComponent<PopUp>().textSpeed = 0.5f;
+        popUpObject.GetComponent<PopUp>().textValue = "OUCH!";
     }
 }

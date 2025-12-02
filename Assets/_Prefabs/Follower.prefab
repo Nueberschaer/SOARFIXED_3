@@ -129,6 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FollowingEnemy
   rb: {fileID: 0}
   boxCollider: {fileID: 0}
+  popUpPrefab: {fileID: 2873154699221264692, guid: 7b5af8c9d66b9e041a0f107743cd35d6, type: 3}
 --- !u!1001 &786093257443534762
 PrefabInstance:
   m_ObjectHideFlags: 0
