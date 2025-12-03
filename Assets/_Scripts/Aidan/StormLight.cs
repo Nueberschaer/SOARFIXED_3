@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +6,8 @@ using UnityEngine.UI;
 public class StormLight : MonoBehaviour
 {
     public TextMeshProUGUI lowText;
-    private bool on = false;
+    private bool blinking = false;
+    private float flashDuration = 0.2f;
 
     public float stormLightEnergy = 100f; //starting stormlight value
     private float stormLightUsage = 2f; // how quickly the player loses stomlight
@@ -26,17 +28,29 @@ public class StormLight : MonoBehaviour
     void Update()
     {
         StormLightReduction();
-        if (stormLightEnergy <= 15 && on == false)
+        if (stormLightEnergy <= 20 && blinking == false)
         {
-            //Debug.Log("IF");
-            on = true;
-            lowText.gameObject.SetActive(true);
+            Debug.Log("IF");
+            blinking = true;
+            StartCoroutine(Flashing());
         }
-        else
+        else if (stormLightEnergy >= 20 && blinking == true)
         {
-            //Debug.Log("Else");
-            on = false;
+            Debug.Log("Else");
+            blinking = false;
+            StopCoroutine(Flashing());
             lowText.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator Flashing()
+    {
+        while (blinking)
+        {
+            lowText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(flashDuration);
+            lowText.gameObject.SetActive(false);
+            yield return new WaitForSeconds(flashDuration);
         }
     }
 
