@@ -23,6 +23,7 @@ TagManager:
   - Fused
   - Advancer
   - Follower
+  - SkyDetector
   layers:
   - Default
   - TransparentFX

@@ -88,7 +88,7 @@ public class EnemySpawner : MonoBehaviour
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
-            levelFiveSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + (_levelDistance * 4) + _bufferZone, _levelOneEnd + (_levelDistance * 4))); //controls the position in which enemies spawn
+            levelFiveSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + ((_levelDistance * 4) + 75) + _bufferZone, _levelOneEnd + ((_levelDistance * 4) + 75))); //controls the position in which enemies spawn
 
             Instantiate(randomEnemy, levelFiveSpawnPosition, Quaternion.identity); // spawns the enemy
         }

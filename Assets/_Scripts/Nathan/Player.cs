@@ -9,6 +9,9 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerFlight : MonoBehaviour
 {
+    public GameObject popUpDeathPrefab;
+    public GameObject popUpSkyPrefab;
+    
     public int distance = 0;
     private float stormSpeed = -10000f;
     StormLight stormLightScript;
@@ -211,7 +214,11 @@ public class PlayerFlight : MonoBehaviour
 
     private IEnumerator Death()
     {
+        GameObject popUpObject = Instantiate(popUpDeathPrefab);
+        popUpObject.GetComponent<PopUp>().textSpeed = 3f;
+        popUpObject.GetComponent<PopUp>().textValue = "GOODBYE ROSHAR";
         yield return Wait3;
+        deathStarted = false;
         if (stormLightScript != null && stormLightScript.stormLightEnergy <= 0)
         {
             SetCursorLocked(false);
@@ -243,6 +250,14 @@ public class PlayerFlight : MonoBehaviour
         if (other.CompareTag("Level3")) enemySpawnerScript?.LevelThreeEnemies();
         if (other.CompareTag("Level4")) enemySpawnerScript?.LevelFourEnemies();
         if (other.CompareTag("Level5")) enemySpawnerScript?.LevelFiveEnemies();
+
+        if (other.CompareTag("SkyDetector"))
+        {
+            other.gameObject.SetActive(false);
+            GameObject popUpObject = Instantiate(popUpSkyPrefab);
+            popUpObject.GetComponent<PopUp>().textSpeed = 5f;
+            popUpObject.GetComponent<PopUp>().textValue = "So calm, if only I could stay up here forever...";
+        }
     }
 
     void OnDisable()

@@ -1,8 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StormLight : MonoBehaviour
 {
+    public TextMeshProUGUI lowText;
+    private bool on = false;
 
     public float stormLightEnergy = 100f; //starting stormlight value
     private float stormLightUsage = 2f; // how quickly the player loses stomlight
@@ -16,12 +19,25 @@ public class StormLight : MonoBehaviour
     private void Awake()
     {
         player = GameObject.Find("Player").GetComponent<PlayerFlight>();
+        lowText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         StormLightReduction();
+        if (stormLightEnergy <= 15 && on == false)
+        {
+            //Debug.Log("IF");
+            on = true;
+            lowText.gameObject.SetActive(true);
+        }
+        else
+        {
+            //Debug.Log("Else");
+            on = false;
+            lowText.gameObject.SetActive(false);
+        }
     }
 
     private void StormLightReduction() // reduce stormlight over time

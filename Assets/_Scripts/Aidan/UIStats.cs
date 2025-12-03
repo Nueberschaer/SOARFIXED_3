@@ -8,6 +8,7 @@ public class UIStats : MonoBehaviour
     private PlayerFlight playerScript;
     private Sword swordScript;
 
+
     void Start()
     {
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerFlight>(); //Reference to the player script
@@ -24,7 +25,7 @@ public class UIStats : MonoBehaviour
     private void DistanceDisplay()
     {
         int distance = playerScript.distance += 273; // players starting position is -273
-        distanceText.text = distance.ToString();
+        distanceText.text = distance.ToString() + "m";
     }
 
     private void KillsDisplay()
