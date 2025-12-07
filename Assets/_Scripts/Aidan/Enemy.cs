@@ -41,23 +41,16 @@ public class Enemy : MonoBehaviour
          }
          if (other.gameObject.tag == "Sword")
          {
-            StartCoroutine(Invulnerability());
+            boxCollider.enabled = false;
             rb.AddForce(300, -1000, collisionSpeed);
          }
          if (other.gameObject.tag == "Body")
          {
+            boxCollider.enabled = false;
             PopUp();
-            StartCoroutine(Invulnerability());
             stormLightScript.stormLightEnergy -= 30;
          }
      }
-
-    protected IEnumerator Invulnerability()
-    {
-        boxCollider.isTrigger = false;
-        yield return new WaitForSeconds(2);
-        boxCollider.isTrigger = true;
-    }
 
     private void PopUp()
     {

@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
     private int _chasmSideMax = 717;
     private int _levelOneStart = -200;
     private int _levelOneEnd = 3000;
-    private int _levelDistance = 3200;
+    private int _levelDistance = 3300;
     private int _bufferZone = 300;
 
     void Awake()
@@ -76,7 +76,7 @@ public class EnemySpawner : MonoBehaviour
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
-            levelFourSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + (_levelDistance * 3) + _bufferZone, _levelOneEnd + (_levelDistance * 3))); //controls the position in which enemies spawn
+            levelFourSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + ((_levelDistance * 3) + 50) + _bufferZone, _levelOneEnd + ((_levelDistance * 3) + 50))); //controls the position in which enemies spawn
 
             Instantiate(randomEnemy, levelFourSpawnPosition, Quaternion.identity); // spawns the enemy
         }
@@ -88,7 +88,7 @@ public class EnemySpawner : MonoBehaviour
         for (int count = 0; count < spawnCount; count++) // spawns as many enemys as the count length
         {
             EnemyPicker(); //picks the enemy type
-            levelFiveSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + ((_levelDistance * 4) + 75) + _bufferZone, _levelOneEnd + ((_levelDistance * 4) + 75))); //controls the position in which enemies spawn
+            levelFiveSpawnPosition = new Vector3(Random.Range(_chasmSideMin, _chasmSideMax), Random.Range(_chasmHeightMin, _chasmHeightMax), Random.Range(_levelOneStart + ((_levelDistance * 4) + 140) + _bufferZone, _levelOneEnd + ((_levelDistance * 4) + 140))); //controls the position in which enemies spawn
 
             Instantiate(randomEnemy, levelFiveSpawnPosition, Quaternion.identity); // spawns the enemy
         }
