@@ -1,2 +1,15 @@
 fileFormatVersion: 2
 guid: 50aed11ade70aee4f99dabe8e25f9363
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - popUpDeathPrefab: {instanceID: 0}
+  - popUpSkyPrefab: {instanceID: 0}
+  - popUpPrefab: {instanceID: 0}
+  - playerCamera: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

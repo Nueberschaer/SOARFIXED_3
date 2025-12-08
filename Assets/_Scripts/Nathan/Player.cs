@@ -11,6 +11,7 @@ public class PlayerFlight : MonoBehaviour
 {
     public GameObject popUpDeathPrefab;
     public GameObject popUpSkyPrefab;
+    public GameObject popUpOrbPrefab;
     
     public int distance = 0;
     private float stormSpeed = -10000f;
@@ -46,6 +47,7 @@ public class PlayerFlight : MonoBehaviour
     private float camPitch;
     private float camRoll;
     private float ignoreMouseUntilTime = 0f;
+    private bool isOrbTextActive = false;
 
     private bool deathStarted, winStarted, loadingScene;
     private static readonly WaitForSeconds Wait3 = new WaitForSeconds(3f);
@@ -243,8 +245,18 @@ public class PlayerFlight : MonoBehaviour
             rb.AddForce(0f, stormSpeed, 0f);
         if (other.CompareTag("Orb"))
         {
+            
             if (stormLightScript != null) stormLightScript.stormLightEnergy = 100;
             other.gameObject.SetActive(false);
+            if (isOrbTextActive == false)
+            {
+                isOrbTextActive = true;
+                GameObject popUpOrb = Instantiate(popUpOrbPrefab);
+                popUpOrb.GetComponent<PopUp>().textSpeed = 1f;
+                popUpOrb.GetComponent<PopUp>().textValue = "STORMLIGHT REPLENISH ME";
+                isOrbTextActive = false;
+            }
+            
         }
         if (other.CompareTag("Level2")) enemySpawnerScript?.LevelTwoEnemies();
         if (other.CompareTag("Level3")) enemySpawnerScript?.LevelThreeEnemies();
