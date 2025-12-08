@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022c803cc22583c448e77c479250dadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopUpStormlightScript
+  text: {fileID: 0}
+  textValue: 
+  textSpeed: 0
 --- !u!1 &5901372613844983762
 GameObject:
   m_ObjectHideFlags: 0
