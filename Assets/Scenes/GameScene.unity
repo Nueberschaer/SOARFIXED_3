@@ -16820,7 +16820,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerFlight
   popUpDeathPrefab: {fileID: 6441101754352296492, guid: 7745d50e7eadf544f81833de4a051c62, type: 3}
   popUpSkyPrefab: {fileID: 6196022451972833753, guid: f0f2415cedd27e543aad230f66233595, type: 3}
-  popUpOrbPrefab: {fileID: 0}
+  popUpOrbPrefab: {fileID: 1907555107453231963, guid: c281278dc330ee34097ac15bbf1a0688, type: 3}
   distance: 0
   playerCamera: {fileID: 855958879}
   baseFOV: 60
