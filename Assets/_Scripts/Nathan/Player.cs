@@ -167,7 +167,6 @@ public class PlayerFlight : MonoBehaviour
             moveDirection = desiredInput;
         }
 
-        distance = (int)transform.position.z;
     }
 
     void FixedUpdate()
@@ -202,6 +201,7 @@ public class PlayerFlight : MonoBehaviour
             loadingScene = true;
             SceneManager.LoadScene(2);
         }
+        distance = (int)transform.position.z;
     }
 
     void LateUpdate()
